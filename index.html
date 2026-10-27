@@ -49,11 +49,18 @@
     document.getElementById('load').innerHTML = '<div class="msg"><b>Open your personal link</b>Use the link in your Utah Hockey staff schedule email. After that, this icon opens your page.</div>';
     return;
   }
+  var src = 'https://script.google.com/macros/s/' + s + '/exec?' + (a ? 'a=' + encodeURIComponent(a) : 't=' + encodeURIComponent(t));
+  // Safety net: if Google won't load the page inside the app (some browsers block its cookies here and
+  // Google answers 401), go to the normal page instead. The page says "ready" as soon as it loads.
+  var ready = false;
+  window.addEventListener('message', function (ev) { if (ev.data && ev.data.utahStaff === 'ready') ready = true; });
+  setTimeout(function () { if (!ready) location.replace(src); }, 9000);
   var f = document.createElement('iframe');
-  f.src = 'https://script.google.com/macros/s/' + s + '/exec?' + (a ? 'a=' + encodeURIComponent(a) : 't=' + encodeURIComponent(t));
+  f.src = src;
   f.title = 'Utah Hockey Staff Schedule';
   f.allow = 'clipboard-write';
-  f.onload = function () { setTimeout(function () { document.getElementById('load').className = 'load gone'; }, 300); };
+  f.onload = function () { setTimeout(function () { if (ready) document.getElementById('load').className = 'load gone'; }, 300); };
+  window.addEventListener('message', function (ev) { if (ev.data && ev.data.utahStaff === 'ready') document.getElementById('load').className = 'load gone'; });
   document.body.insertBefore(f, document.body.firstChild);
 })();
 </script>
