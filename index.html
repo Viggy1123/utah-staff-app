@@ -54,7 +54,7 @@
   // Google answers 401), go to the normal page instead. The page says "ready" as soon as it loads.
   var ready = false;
   window.addEventListener('message', function (ev) { if (ev.data && ev.data.utahStaff === 'ready') ready = true; });
-  setTimeout(function () { if (!ready) location.replace(src); }, 9000);
+  location.replace(src); return;   // browsers block Google inside this page (401), so just open the normal page
   var f = document.createElement('iframe');
   f.src = src;
   f.title = 'Utah Hockey Staff Schedule';
