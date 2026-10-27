@@ -1,0 +1,10 @@
+{
+  "name": "Utah Hockey Staff Schedule",
+  "short_name": "Utah Staff",
+  "display": "standalone",
+  "background_color": "#0b0d12",
+  "theme_color": "#0b0d12",
+  "icons": [
+    { "src": "https://i.postimg.cc/wTL077nq/Utah-Hockey-White-bottom.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Utah Hockey Staff</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Utah Staff">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="https://i.postimg.cc/wTL077nq/Utah-Hockey-White-bottom.png">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/wTL077nq/Utah-Hockey-White-bottom.png">
+<style>
+  html,body{margin:0;height:100%;background:#0b0d12;overflow:hidden}
+  iframe{position:fixed;inset:0;width:100%;height:100%;border:0;background:#0b0d12;display:block}
+  .load{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+        color:#8d97a6;font:700 13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;letter-spacing:.08em;text-transform:uppercase;
+        transition:opacity .3s}
+  .load.gone{opacity:0;pointer-events:none}
+  .spin{position:relative;width:64px;height:64px}
+  .spin i{position:absolute;inset:0;border-radius:50%;border:4px solid transparent}
+  .spin i:nth-child(1){border-top-color:#c8102e;border-right-color:#c8102e;animation:sp 1s cubic-bezier(.6,.1,.4,.9) infinite}
+  .spin i:nth-child(2){inset:10px;border-bottom-color:#eef2f7;border-left-color:#eef2f7;opacity:.85;animation:sp .8s linear infinite reverse}
+  .spin b{position:absolute;left:50%;top:50%;width:14px;height:8px;margin:-4px 0 0 -7px;border-radius:50%;background:#eef2f7;box-shadow:0 2px 0 #6b7280}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .msg{max-width:300px;text-align:center;text-transform:none;letter-spacing:0;font-weight:500;font-size:15px;color:#c5ccd8}
+  .msg b{display:block;color:#eef2f7;font-size:17px;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="load" id="load"><div class="spin"><i></i><i></i><b></b></div><span id="txt">Loading your schedule</span></div>
+<script>
+// Utah Hockey Staff Schedule: app shell. Shows the Staff Schedule sign-up page (a Google Apps Script web app)
+// full screen on a dark background. Personal links look like  ?s=<web app id>&t=<personal token>.
+// The link is remembered on this device, so the home-screen icon always opens your own page.
+(function () {
+  var q = new URLSearchParams(location.search), KEY = 'utahStaffLink';
+  var s = q.get('s') || '', t = q.get('t') || '', a = q.get('a') || '';
+  var ok = /^[A-Za-z0-9_-]{20,200}$/;
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  if (ok.test(s) && t && !a) { try { localStorage.setItem(KEY, JSON.stringify({ s: s, t: t })); } catch (e) {} }
+  else if (!ok.test(s) && saved && ok.test(saved.s)) { s = saved.s; t = saved.t; }
+  if (!ok.test(s) || !(t || a)) {
+    document.getElementById('load').innerHTML = '<div class="msg"><b>Open your personal link</b>Use the link in your Utah Hockey staff schedule email. After that, this icon opens your page.</div>';
+    return;
+  }
+  var f = document.createElement('iframe');
+  f.src = 'https://script.google.com/macros/s/' + s + '/exec?' + (a ? 'a=' + encodeURIComponent(a) : 't=' + encodeURIComponent(t));
+  f.title = 'Utah Hockey Staff Schedule';
+  f.allow = 'clipboard-write';
+  f.onload = function () { setTimeout(function () { document.getElementById('load').className = 'load gone'; }, 300); };
+  document.body.insertBefore(f, document.body.firstChild);
+})();
+</script>
+</body>
+</html>
